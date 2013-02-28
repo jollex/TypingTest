@@ -21,12 +21,14 @@ public class Screen {
 	private JTextField ans;
 	private JLabel score;
 	private JLabel accuracy;
+	private JButton restart;
 	private final int WINDOW_WIDTH = 500;
 	private final int WINDOW_HEIGHT = 115;
 	
 	private static boolean timerOn = false;
 	private final int TIMER_SECONDS = 60;
-
+	private int count = 0;
+	
 	private static int wordsCorrect = 0;
 	private static int wordsTotal = 0;
 	
@@ -57,6 +59,15 @@ public class Screen {
 		game.add(start);
 		start.setVisible(true);
 		
+		//Create action listener and add it to button
+		ActionListener startAction = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameStart();
+			}
+		};
+		start.addActionListener(startAction);
+		
 		//Create and add word label
 		word = new JLabel(newWord());
 		word.setFont(new Font("Dialog", Font.PLAIN, 18));
@@ -72,31 +83,6 @@ public class Screen {
 		ans.setSize(WINDOW_WIDTH, 10);
 		ans.setVisible(false);
 		
-		//Create and add score label
-		score = new JLabel("Score: ");
-		score.setFont(new Font("Dialog", Font.PLAIN, 18));
-		score.setBorder(BorderFactory.createEmptyBorder(18, 0, 5, 0));
-		score.setAlignmentX(Component.CENTER_ALIGNMENT);
-		game.add(score);
-		score.setVisible(false);
-		
-		//Create and add accuracy label
-		accuracy = new JLabel("Accuracy: ");
-		accuracy.setFont(new Font("Dialog", Font.PLAIN, 18));
-		accuracy.setBorder(BorderFactory.createEmptyBorder(5, 0, 10, 0));
-		accuracy.setAlignmentX(Component.CENTER_ALIGNMENT);
-		game.add(accuracy);
-		accuracy.setVisible(false);
-		
-		//Create action listener and add it to button
-		ActionListener startAction = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameStart();
-			}
-		};
-		start.addActionListener(startAction);
-		
 		//Creates action listener for text field and adds it
 		ActionListener enter = new ActionListener() {
 			@Override
@@ -105,6 +91,37 @@ public class Screen {
 			}
 		};
 		ans.addActionListener(enter);
+		
+		//Create and add score label
+		score = new JLabel("Score: ");
+		score.setFont(new Font("Dialog", Font.PLAIN, 18));
+		score.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+		score.setAlignmentX(Component.CENTER_ALIGNMENT);
+		game.add(score);
+		score.setVisible(false);
+		
+		//Create and add accuracy label
+		accuracy = new JLabel("Accuracy: ");
+		accuracy.setFont(new Font("Dialog", Font.PLAIN, 18));
+		accuracy.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+		accuracy.setAlignmentX(Component.CENTER_ALIGNMENT);
+		game.add(accuracy);
+		accuracy.setVisible(false);
+		
+		//Create and add restart button
+		restart = new JButton("Play again");
+		restart.setAlignmentX(Component.CENTER_ALIGNMENT);
+		game.add(restart);
+		restart.setVisible(false);
+		
+		//Create action listener for restart button and add it
+		ActionListener restartAction = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				restart();
+			}
+		};
+		restart.addActionListener(restartAction);
 		
 		//Add content pane to frame
 		frame.setContentPane(game);
@@ -117,12 +134,15 @@ public class Screen {
 	//Creates a 60 second timer
 	ActionListener updater = new ActionListener() {
 		public void actionPerformed(ActionEvent time) {
-			timerOn = false;
-			timer.stop();
-			gameDone();
+			if (count > TIMER_SECONDS) {
+				timerOn = false;
+				timer.stop();
+				gameDone();
+			}
+			count++;
 		}
 	};
-	Timer timer = new Timer(TIMER_SECONDS * 1000, updater);
+	Timer timer = new Timer(1000, updater);
 	
 	/**
 	 *Updates the display:
@@ -196,6 +216,25 @@ public class Screen {
 		ans.setVisible(false);
 		score.setVisible(true);
 		accuracy.setVisible(true);
+		restart.setVisible(true);
+	}
+	
+	private void restart() {
+		loadRandom();
+		loadWords();
+		word.setText(newWord());
+		ans.setText("");
+		wordsCorrect = 0;
+		wordsTotal = 0;
+		score.setVisible(false);
+		accuracy.setVisible(false);
+		restart.setVisible(false);
+		word.setVisible(true);
+		ans.setVisible(true);
+		ans.requestFocus();
+		count = 0;
+		timerOn = true;
+		timer.start();
 	}
 	
 	//Loads words from words.txt to a string array called words.
