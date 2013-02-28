@@ -17,7 +17,10 @@ public class Screen {
 	private JPanel game;
 	private JLabel instructions;
 	private JButton start;
+	private JPanel topGame;
 	private JLabel word;
+	private JLabel timeLeft;
+	private int timeLeftInt = 60;
 	private JTextField ans;
 	private JLabel score;
 	private JLabel accuracy;
@@ -25,7 +28,7 @@ public class Screen {
 	private final int WINDOW_WIDTH = 500;
 	private final int WINDOW_HEIGHT = 115;
 	
-	private final int TIMER_SECONDS = 2;
+	private final int TIMER_SECONDS = 60;
 	private int count = 0;
 	
 	private static int wordsCorrect = 0;
@@ -67,13 +70,28 @@ public class Screen {
 		};
 		start.addActionListener(startAction);
 		
+		//Create content pane for word and timer
+		topGame = new JPanel();
+		topGame.setLayout(new FlowLayout());
+		topGame.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		game.add(topGame);
+		
 		//Create and add word label
 		word = new JLabel(newWord());
 		word.setFont(new Font("Dialog", Font.PLAIN, 18));
-		word.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-		word.setAlignmentX(Component.CENTER_ALIGNMENT);
-		game.add(word);
+		word.setAlignmentX(Component.LEFT_ALIGNMENT);
+		int align = (WINDOW_WIDTH - 160) / 2;
+		word.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, align));
+		topGame.add(word);
 		word.setVisible(false);
+		
+		//Create and add timer label
+		timeLeft = new JLabel(Integer.toString(timeLeftInt));
+		timeLeft.setFont(new Font("Dialog", Font.PLAIN, 18));
+		timeLeft.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		timeLeft.setBorder(BorderFactory.createEmptyBorder(0, align, 0, 10));
+		topGame.add(timeLeft);
+		timeLeft.setVisible(false);
 		
 		//Create and add answer text field
 		ans = new JTextField(20);
@@ -137,6 +155,10 @@ public class Screen {
 				timer.stop();
 				gameDone();
 			}
+			if (timeLeftInt > 0) {
+			timeLeftInt--;
+			timeLeft.setText(Integer.toString(timeLeftInt));
+			}
 			count++;
 		}
 	};
@@ -198,6 +220,7 @@ public class Screen {
 		instructions.setVisible(false);
 		start.setVisible(false);
 		word.setVisible(true);
+		timeLeft.setVisible(true);
 		ans.setVisible(true);
 		ans.requestFocus();
 	}
@@ -210,6 +233,8 @@ public class Screen {
 		accuracy.setText("Accuracy: " + (int)accuracyPercent + "%");
 		
 		word.setVisible(false);
+		timeLeft.setVisible(false);
+		topGame.setVisible(false);
 		ans.setVisible(false);
 		score.setVisible(true);
 		accuracy.setVisible(true);
