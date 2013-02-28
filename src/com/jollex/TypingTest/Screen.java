@@ -25,7 +25,7 @@ public class Screen {
 	private final int WINDOW_WIDTH = 500;
 	private final int WINDOW_HEIGHT = 115;
 	
-	private final int TIMER_SECONDS = 60;
+	private final int TIMER_SECONDS = 2;
 	private int count = 0;
 	
 	private static int wordsCorrect = 0;
@@ -230,7 +230,7 @@ public class Screen {
 		ans.setVisible(true);
 		ans.requestFocus();
 		count = 0;
-		timer.start();
+		timer.restart();
 	}
 	
 	//Loads words from words.txt to a string array called words.
