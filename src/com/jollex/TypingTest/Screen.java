@@ -25,7 +25,6 @@ public class Screen {
 	private final int WINDOW_WIDTH = 500;
 	private final int WINDOW_HEIGHT = 115;
 	
-	private static boolean timerOn = false;
 	private final int TIMER_SECONDS = 60;
 	private int count = 0;
 	
@@ -87,7 +86,7 @@ public class Screen {
 		ActionListener enter = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (timerOn == true) update();
+				update();
 			}
 		};
 		ans.addActionListener(enter);
@@ -103,7 +102,7 @@ public class Screen {
 		//Create and add accuracy label
 		accuracy = new JLabel("Accuracy: ");
 		accuracy.setFont(new Font("Dialog", Font.PLAIN, 18));
-		accuracy.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+		accuracy.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		accuracy.setAlignmentX(Component.CENTER_ALIGNMENT);
 		game.add(accuracy);
 		accuracy.setVisible(false);
@@ -135,7 +134,6 @@ public class Screen {
 	ActionListener updater = new ActionListener() {
 		public void actionPerformed(ActionEvent time) {
 			if (count > TIMER_SECONDS) {
-				timerOn = false;
 				timer.stop();
 				gameDone();
 			}
@@ -195,7 +193,6 @@ public class Screen {
 	
 	//Displays the word and starts the text field
 	private void gameStart() {
-		timerOn = true;
 		timer.start();
 		
 		instructions.setVisible(false);
@@ -233,7 +230,6 @@ public class Screen {
 		ans.setVisible(true);
 		ans.requestFocus();
 		count = 0;
-		timerOn = true;
 		timer.start();
 	}
 	
