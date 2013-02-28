@@ -20,16 +20,14 @@ public class Screen {
 	private JPanel topGame;
 	private JLabel word;
 	private JLabel timeLeft;
-	private int timeLeftInt = 60;
+	private final int TIMER_SECONDS = 60;
+	private int timeLeftInt = TIMER_SECONDS;
 	private JTextField ans;
 	private JLabel score;
 	private JLabel accuracy;
 	private JButton restart;
 	private final int WINDOW_WIDTH = 500;
 	private final int WINDOW_HEIGHT = 115;
-	
-	private final int TIMER_SECONDS = 60;
-	private int count = 0;
 	
 	private static int wordsCorrect = 0;
 	private static int wordsTotal = 0;
@@ -80,7 +78,7 @@ public class Screen {
 		word = new JLabel(newWord());
 		word.setFont(new Font("Dialog", Font.PLAIN, 18));
 		word.setAlignmentX(Component.LEFT_ALIGNMENT);
-		int align = (WINDOW_WIDTH - 160) / 2;
+		int align = (WINDOW_WIDTH - 180) / 2;
 		word.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, align));
 		topGame.add(word);
 		word.setVisible(false);
@@ -151,7 +149,7 @@ public class Screen {
 	//Creates a 60 second timer
 	ActionListener updater = new ActionListener() {
 		public void actionPerformed(ActionEvent time) {
-			if (count > TIMER_SECONDS) {
+			if (timeLeftInt == 0) {
 				timer.stop();
 				gameDone();
 			}
@@ -159,7 +157,6 @@ public class Screen {
 			timeLeftInt--;
 			timeLeft.setText(Integer.toString(timeLeftInt));
 			}
-			count++;
 		}
 	};
 	Timer timer = new Timer(1000, updater);
@@ -252,9 +249,11 @@ public class Screen {
 		accuracy.setVisible(false);
 		restart.setVisible(false);
 		word.setVisible(true);
+		timeLeft.setVisible(true);
 		ans.setVisible(true);
+		topGame.setVisible(true);
 		ans.requestFocus();
-		count = 0;
+		timeLeftInt = TIMER_SECONDS;
 		timer.restart();
 	}
 	
